@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Giỏ hàng của bạn - Shop Bách Khoa{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">Giỏ hàng của bạn</h1>
+    
+    {% if cart|length > 0 %}
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card border-0 shadow mb-4">
+                <div class="card-body p-0">
+                    <table class="table cart-table mb-0">
+                        <thead>
+                            <tr>
+                                <th scope="col">Sản phẩm</th>
+                                <th scope="col">Giá</th>
+                                <th scope="col">Số lượng</th>
+                                <th scope="col">Thành tiền</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in cart %}
+                            {% with product=item.product %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'images/product-placeholder.jpg' %}{% endif %}" alt="{{ product.name }}" class="img-thumbnail me-3">
+                                        <div>
+                                            <h5><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h5>
+                                            <span class="text-muted">Danh mục: {{ product.category }}</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>{{ item.price }} VNĐ</td>
+                                <td>
+                                    <form action="{% url 'cart:cart_update' product.id %}" method="post">
+                                        {% csrf_token %}
+                                        <div class="input-group input-group-sm" style="width: 100px;">
+                                            <select name="quantity" class="form-select" onchange="this.form.submit()">
+                                                {% for i in "123456789"|make_list %}
+                                                <option value="{{ forloop.counter }}" {% if item.quantity == forloop.counter %}selected{% endif %}>
+                                                    {{ forloop.counter }}
+                                                </option>
+                                                {% endfor %}
+                                            </select>
+                                            <input type="hidden" name="override" value="True">
+                                        </div>
+                                    </form>
+                                </td>
+                                <td>{{ item.total_price }} VNĐ</td>
+                                <td>
+                                    <form action="{% url 'cart:cart_remove' product.id %}" method="post">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endwith %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="mb-4">
+                <a href="{% url 'shop:product_list' %}" class="btn btn-outline-primary">
+                    <i class="fas fa-arrow-left me-2"></i>Tiếp tục mua sắm
+                </a>
+                <button type="button" class="btn btn-outline-danger ms-2" data-bs-toggle="modal" data-bs-target="#clearCartModal">
+                    <i class="fas fa-trash me-2"></i>Xóa giỏ hàng
+                </button>
+            </div>
+            
+            <!-- Clear Cart Modal -->
+            <div class="modal fade" id="clearCartModal" tabindex="-1" aria-labelledby="clearCartModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="clearCartModalLabel">Xác nhận xóa giỏ hàng</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Bạn có chắc chắn muốn xóa tất cả sản phẩm khỏi giỏ hàng?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                            <a href="#" class="btn btn-danger">Xóa giỏ hàng</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card border-0 shadow mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Tóm tắt đơn hàng</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Tạm tính:</span>
+                        <span>{{ cart.get_total_price }} VNĐ</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Giảm giá:</span>
+                        <span>0 VNĐ</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Phí vận chuyển:</span>
+                        <span>Miễn phí</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between mb-3">
+                        <strong>Tổng cộng:</strong>
+                        <strong>{{ cart.get_total_price }} VNĐ</strong>
+                    </div>
+                    
+                    <div class="d-grid gap-2 mt-4">
+                        <a href="{% url 'order:order_create' %}" class="btn btn-primary">
+                            <i class="fas fa-shopping-bag me-2"></i>Tiến hành thanh toán
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card border-0 shadow">
+                <div class="card-body">
+                    <h5 class="mb-3">Mã giảm giá</h5>
+                    <form>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="Nhập mã giảm giá">
+                            <button class="btn btn-outline-primary" type="submit">Áp dụng</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <div class="mb-4">
+            <i class="fas fa-shopping-cart fa-5x text-muted"></i>
+        </div>
+        <h3>Giỏ hàng của bạn đang trống</h3>
+        <p class="text-muted">Thêm sản phẩm vào giỏ hàng để tiến hành thanh toán.</p>
+        <a href="{% url 'shop:product_list' %}" class="btn btn-primary mt-3">
+            <i class="fas fa-shopping-bag me-2"></i>Mua sắm ngay
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

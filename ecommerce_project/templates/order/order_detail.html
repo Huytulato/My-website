@@ -1,0 +1,189 @@
+{% extends 'base.html' %}
+
+{% block title %}Chi tiết đơn hàng #{{ order.id }} - Shop Bách Khoa{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">Chi tiết đơn hàng #{{ order.id }}</h1>
+    
+    <div class="row">
+        <div class="col-md-8 mb-4">
+            <div class="card border-0 shadow mb-4">
+                <div class="card-header bg-light">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Thông tin đơn hàng</h5>
+                        <span class="badge {% if order.status == 'pending' %}bg-warning{% elif order.status == 'confirmed' %}bg-info{% elif order.status == 'shipped' %}bg-primary{% elif order.status == 'delivered' %}bg-success{% else %}bg-danger{% endif %}">
+                            {{ order.get_status_display }}
+                        </span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <h6>Mã đơn hàng</h6>
+                            <p>#{{ order.id }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <h6>Ngày đặt hàng</h6>
+                            <p>{{ order.created_at|date:"d/m/Y H:i" }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <h6>Cập nhật lần cuối</h6>
+                            <p>{{ order.updated_at|date:"d/m/Y H:i" }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <h6>Tổng tiền</h6>
+                            <p class="fw-bold">{{ order.get_total_cost }} VNĐ</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card border-0 shadow mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Sản phẩm đã đặt</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Sản phẩm</th>
+                                    <th>Giá</th>
+                                    <th>Số lượng</th>
+                                    <th>Thành tiền</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in order.items.all %}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="img-thumbnail me-3" style="width: 60px;">
+                                            <div>
+                                                <h6 class="mb-0">{{ item.product.name }}</h6>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>{{ item.price }} VNĐ</td>
+                                    <td>{{ item.quantity }}</td>
+                                    <td>{{ item.get_cost }} VNĐ</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer bg-white">
+                    <div class="d-flex justify-content-between">
+                        <strong>Tổng tiền:</strong>
+                        <strong>{{ order.get_total_cost }} VNĐ</strong>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="d-flex gap-2 mb-4">
+                <a href="{% url 'user:order_history' %}" class="btn btn-outline-primary">
+                    <i class="fas fa-arrow-left me-2"></i>Quay lại đơn hàng
+                </a>
+                <a href="{% url 'main:home' %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-home me-2"></i>Trang chủ
+                </a>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card border-0 shadow mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Thông tin giao hàng</h5>
+                </div>
+                <div class="card-body">
+                    <h6>Người nhận</h6>
+                    <p>{{ order.full_name }}</p>
+                    
+                    <h6>Địa chỉ</h6>
+                    <p>{{ order.address }}, {{ order.city }}</p>
+                    
+                    <h6>Email</h6>
+                    <p>{{ order.email }}</p>
+                    
+                    <h6>Số điện thoại</h6>
+                    <p>{{ order.phone }}</p>
+                    
+                    {% if order.note %}
+                    <h6>Ghi chú</h6>
+                    <p>{{ order.note }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="card border-0 shadow">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Theo dõi đơn hàng</h5>
+                </div>
+                <div class="card-body">
+                    <div class="track-order">
+                        <div class="step {% if order.status != 'cancelled' %}active{% endif %} mb-3">
+                            <div class="step-icon"><i class="fas fa-shopping-cart"></i></div>
+                            <div class="step-text">
+                                <h6>Đơn hàng đã đặt</h6>
+                                <p class="text-muted">{{ order.created_at|date:"d/m/Y H:i" }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="step {% if order.status == 'confirmed' or order.status == 'shipped' or order.status == 'delivered' %}active{% endif %} mb-3">
+                            <div class="step-icon"><i class="fas fa-check-circle"></i></div>
+                            <div class="step-text">
+                                <h6>Đã xác nhận</h6>
+                                <p class="text-muted">{% if order.status == 'confirmed' or order.status == 'shipped' or order.status == 'delivered' %}Đã xác nhận{% else %}Đang chờ xác nhận{% endif %}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="step {% if order.status == 'shipped' or order.status == 'delivered' %}active{% endif %} mb-3">
+                            <div class="step-icon"><i class="fas fa-truck"></i></div>
+                            <div class="step-text">
+                                <h6>Đang giao hàng</h6>
+                                <p class="text-muted">{% if order.status == 'shipped' or order.status == 'delivered' %}Đang giao hàng{% else %}Đang chuẩn bị{% endif %}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="step {% if order.status == 'delivered' %}active{% endif %}">
+                            <div class="step-icon"><i class="fas fa-box-open"></i></div>
+                            <div class="step-text">
+                                <h6>Đã giao hàng</h6>
+                                <p class="text-muted">{% if order.status == 'delivered' %}Đã giao hàng thành công{% else %}Đang chờ giao hàng{% endif %}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_css %}
+<style>
+    .track-order .step {
+        display: flex;
+        align-items: flex-start;
+    }
+    
+    .track-order .step-icon {
+        width: 40px;
+        height: 40px;
+        background-color: #e9ecef;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        color: #6c757d;
+    }
+    
+    .track-order .step.active .step-icon {
+        background-color: var(--color-primary);
+        color: white;
+    }
+</style>
+{% endblock %}
+{% endblock %}

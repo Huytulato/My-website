@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Câu hỏi thường gặp - Shop Bách Khoa{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">Câu hỏi thường gặp (FAQ)</h1>
+    
+    <div class="accordion" id="faqAccordion">
+        {% for faq in faqs %}
+        <div class="accordion-item mb-3 shadow-sm">
+            <h2 class="accordion-header" id="heading{{ faq.id }}">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ faq.id }}" aria-expanded="false" aria-controls="collapse{{ faq.id }}">
+                    {{ faq.question }}
+                </button>
+            </h2>
+            <div id="collapse{{ faq.id }}" class="accordion-collapse collapse" aria-labelledby="heading{{ faq.id }}" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    {{ faq.answer|linebreaks }}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="alert alert-info">
+            Chưa có câu hỏi thường gặp nào được thêm vào.
+        </div>
+        {% endfor %}
+    </div>
+    
+    <div class="mt-5">
+        <h3>Bạn vẫn chưa tìm thấy câu trả lời?</h3>
+        <p>Nếu bạn không tìm thấy câu trả lời cho câu hỏi của mình, vui lòng liên hệ với chúng tôi:</p>
+        <div class="d-flex gap-3">
+            <a href="{% url 'main:contact' %}" class="btn btn-primary">Liên hệ với chúng tôi</a>
+            <a href="#" class="btn btn-outline-primary">Chat trực tuyến</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

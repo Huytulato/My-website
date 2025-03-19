@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block title %}Lịch sử đơn hàng - Shop Bách Khoa{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">Lịch sử đơn hàng</h1>
+    
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card border-0 shadow h-100">
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <div class="avatar-placeholder mb-3">
+                            <i class="fas fa-user fa-4x"></i>
+                        </div>
+                        <h4>{{ user.get_full_name|default:user.username }}</h4>
+                        <p class="text-muted">{{ user.email }}</p>
+                    </div>
+                    
+                    <div class="list-group list-group-flush">
+                        <a href="{% url 'user:profile' %}" class="list-group-item list-group-item-action">
+                            <i class="fas fa-user-circle me-2"></i> Thông tin tài khoản
+                        </a>
+                        <a href="{% url 'user:order_history' %}" class="list-group-item list-group-item-action active">
+                            <i class="fas fa-shopping-bag me-2"></i> Đơn hàng của tôi
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action">
+                            <i class="fas fa-heart me-2"></i> Sản phẩm yêu thích
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action">
+                            <i class="fas fa-map-marker-alt me-2"></i> Địa chỉ giao hàng
+                        </a>
+                        <a href="{% url 'user:logout' %}" class="list-group-item list-group-item-action text-danger">
+                            <i class="fas fa-sign-out-alt me-2"></i> Đăng xuất
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-8 mb-4">
+            <div class="card border-0 shadow">
+                <div class="card-body">
+                    <h3 class="mb-4">Đơn hàng của tôi</h3>
+                    
+                    {% if orders %}
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Mã đơn hàng</th>
+                                    <th>Ngày đặt</th>
+                                    <th>Tổng tiền</th>
+                                    <th>Trạng thái</th>
+                                    <th>Hành động</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in orders %}
+                                <tr>
+                                    <td>#{{ order.id }}</td>
+                                    <td>{{ order.created_at|date:"d/m/Y" }}</td>
+                                    <td>{{ order.get_total_cost }} VNĐ</td>
+                                    <td>
+                                        <span class="badge {% if order.status == 'pending' %}bg-warning{% elif order.status == 'confirmed' %}bg-info{% elif order.status == 'shipped' %}bg-primary{% elif order.status == 'delivered' %}bg-success{% else %}bg-danger{% endif %}">
+                                            {{ order.get_status_display }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'order:order_detail' order.id %}" class="btn btn-outline-primary btn-sm">Chi tiết</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-shopping-bag fa-4x text-muted mb-3"></i>
+                        <h4>Bạn chưa có đơn hàng nào</h4>
+                        <p class="text-muted">Hãy bắt đầu mua sắm và đặt hàng ngay bây giờ!</p>
+                        <a href="{% url 'shop:product_list' %}" class="btn btn-primary mt-3">Mua sắm ngay</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_css %}
+<style>
+    .avatar-placeholder {
+        width: 100px;
+        height: 100px;
+        background-color: var(--color-primary);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+    }
+</style>
+{% endblock %}
+{% endblock %}

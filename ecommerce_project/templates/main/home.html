@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Trang chủ - Shop Bách Khoa{% endblock %}
+
+{% block content %}
+<!-- Hero Banner -->
+<section class="hero-banner mb-5">
+    <div class="container text-center">
+        <h1>Chào mừng đến với Shop Bách Khoa</h1>
+        <p>Cửa hàng dành riêng cho sinh viên Bách khoa với các sản phẩm chất lượng cao và giá cả hợp lý.</p>
+        <a href="{% url 'shop:product_list' %}" class="btn btn-light btn-lg">Mua sắm ngay</a>
+    </div>
+</section>
+
+<!-- Featured Categories -->
+<section class="mb-5">
+    <div class="container">
+        <h2 class="text-center mb-4">Danh mục nổi bật</h2>
+        <div class="row">
+            {% for category in categories %}
+            <div class="col-md-4 mb-4">
+                <div class="category-card">
+                    <a href="{{ category.get_absolute_url }}">
+                        {% if category.image %}
+                        <img src="{{ category.image.url }}" alt="{{ category.name }}" class="img-fluid w-100">
+                        {% else %}
+                        <img src="{% static 'images/category-placeholder.jpg' %}" alt="{{ category.name }}" class="img-fluid w-100">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ category.name }}</h5>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <p>Không có danh mục nào.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Featured Products -->
+<section class="mb-5">
+    <div class="container">
+        <h2 class="text-center mb-4">Sản phẩm nổi bật</h2>
+        <div class="row">
+            {% for product in featured_products %}
+            <div class="col-md-3 mb-4">
+                <div class="product-card h-100">
+                    <a href="{{ product.get_absolute_url }}">
+                        {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid w-100">
+                        {% else %}
+                        <img src="{% static 'images/product-placeholder.jpg' %}" alt="{{ product.name }}" class="img-fluid w-100">
+                        {% endif %}
+                    </a>
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
+                        </h5>
+                        <p class="product-price">{{ product.price }} VNĐ</p>
+                        <a href="{{ product.get_absolute_url }}" class="btn btn-primary btn-sm">Xem chi tiết</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <p>Không có sản phẩm nào.</p>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'shop:product_list' %}" class="btn btn-outline-primary">Xem tất cả sản phẩm</a>
+        </div>
+    </div>
+</section>
+
+<!-- Features -->
+<section class="mb-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 text-center mb-4">
+                <div class="p-4 bg-light rounded">
+                    <i class="fas fa-truck fa-3x text-primary mb-3"></i>
+                    <h5>Giao hàng miễn phí</h5>
+                    <p>Cho tất cả đơn hàng trên 500,000 VNĐ</p>
+                </div>
+            </div>
+            <div class="col-md-4 text-center mb-4">
+                <div class="p-4 bg-light rounded">
+                    <i class="fas fa-undo fa-3x text-primary mb-3"></i>
+                    <h5>Đổi trả dễ dàng</h5>
+                    <p>Trong vòng 7 ngày kể từ khi nhận hàng</p>
+                </div>
+            </div>
+            <div class="col-md-4 text-center mb-4">
+                <div class="p-4 bg-light rounded">
+                    <i class="fas fa-headset fa-3x text-primary mb-3"></i>
+                    <h5>Hỗ trợ 24/7</h5>
+                    <p>Luôn sẵn sàng hỗ trợ bạn mọi lúc</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}Gửi liên hệ thành công - Shop Bách Khoa{% endblock %}
+
+{% block content %}
+<div class="container text-center py-5">
+    <div class="card border-0 shadow mx-auto" style="max-width: 600px;">
+        <div class="card-body p-5">
+            <i class="fas fa-check-circle fa-5x text-success mb-4"></i>
+            <h1 class="mb-4">Cảm ơn bạn đã liên hệ!</h1>
+            <p class="lead">Chúng tôi đã nhận được tin nhắn của bạn và sẽ phản hồi trong thời gian sớm nhất.</p>
+            <div class="mt-5">
+                <a href="{% url 'main:home' %}" class="btn btn-primary me-3">Về trang chủ</a>
+                <a href="{% url 'shop:product_list' %}" class="btn btn-outline-primary">Tiếp tục mua sắm</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

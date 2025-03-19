@@ -1,0 +1,321 @@
+/* Main CSS file */ 
+:root {
+    --color-primary: #8b0000; /* Đỏ trầm */
+    --color-primary-light: #a52a2a; /* Đỏ trầm nhạt hơn */
+    --color-primary-dark: #660000; /* Đỏ trầm đậm hơn */
+    --color-secondary: #f5f5f5; /* Trắng xám nhẹ */
+    --color-text: #333333; /* Màu chữ chính */
+    --color-text-light: #666666; /* Màu chữ nhạt */
+}
+
+/* Reset và bases */
+body {
+    font-family: 'Roboto', sans-serif;
+    color: var(--color-text);
+    background-color: #ffffff;
+}
+
+a {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--color-primary-light);
+}
+
+/* Custom navbar màu đỏ trầm */
+.bg-dark-red {
+    background-color: var(--color-primary);
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.navbar-dark .navbar-nav .nav-link:hover,
+.navbar-dark .navbar-nav .nav-link.active {
+    color: white;
+}
+
+/* Banner trang chủ */
+.hero-banner {
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../images/banner-bg.jpg') no-repeat center center;
+    background-size: cover;
+    height: 500px;
+    display: flex;
+    align-items: center;
+    color: white;
+    text-align: center;
+}
+
+.hero-banner h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.hero-banner p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+/* Thẻ Category và Product */
+.category-card {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+    margin-bottom: 20px;
+}
+
+.category-card:hover {
+    transform: translateY(-5px);
+}
+
+.category-card img {
+    height: 200px;
+    object-fit: cover;
+}
+
+.product-card {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+    margin-bottom: 20px;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+}
+
+.product-card img {
+    height: 220px;
+    object-fit: cover;
+}
+
+.product-card .card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.product-price {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+.product-original-price {
+    font-size: 0.9rem;
+    color: var(--color-text-light);
+    text-decoration: line-through;
+}
+
+/* Chi tiết sản phẩm */
+.product-detail .product-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+.product-detail .product-price {
+    font-size: 1.5rem;
+    margin: 15px 0;
+}
+
+.quantity-selector {
+    width: 120px;
+    margin-bottom: 20px;
+}
+
+/* Nút với theme đỏ trầm */
+.btn-primary {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.btn-primary:hover {
+    background-color: var(--color-primary-dark);
+    border-color: var(--color-primary-dark);
+}
+
+.btn-outline-primary {
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+/* Giỏ hàng */
+.cart-table img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+}
+
+/* FAQ */
+.faq-item {
+    margin-bottom: 20px;
+}
+
+.faq-question {
+    font-weight: 600;
+    padding: 15px;
+    background-color: var(--color-secondary);
+    border-radius: 5px;
+    cursor: pointer;
+    
+position: relative;
+    cursor: pointer;
+}
+
+.faq-question::after {
+    content: '\f078';
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: transform 0.3s;
+}
+
+.faq-question.active::after {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+.faq-answer {
+    padding: 15px;
+    display: none;
+}
+
+/* Testimonials */
+.testimonial-card {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.testimonial-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.testimonial-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin-right: 15px;
+    object-fit: cover;
+}
+
+.testimonial-name {
+    font-weight: 600;
+    margin-bottom: 0;
+}
+
+.testimonial-rating {
+    color: #ffc107;
+    margin-top: 5px;
+}
+
+.testimonial-content {
+    font-style: italic;
+}
+
+/* Auth pages */
+.auth-form {
+    max-width: 450px;
+    margin: 0 auto;
+}
+
+/* Order tracking */
+.order-track-step {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.order-track-status {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #eeeeee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+}
+
+.order-track-status.completed {
+    background-color: var(--color-primary);
+    color: white;
+}
+
+.order-track-status::after {
+    content: '';
+    position: absolute;
+    width: 2px;
+    height: 30px;
+    background-color: #eeeeee;
+    top: 40px;
+    left: 19px;
+}
+
+.order-track-step:last-child .order-track-status::after {
+    display: none;
+}
+
+.order-track-text h5 {
+    margin-bottom: 5px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .hero-banner {
+        height: 350px;
+    }
+    
+    .product-card img {
+        height: 180px;
+    }
+}
+
+@media (max-width: 576px) {
+    .cart-table img {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+/* Animations */
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Print styles */
+@media print {
+    header, footer, .no-print {
+        display: none;
+    }
+    
+    body {
+        background-color: white;
+    }
+    
+    .container {
+        width: 100%;
+        max-width: 100%;
+    }
+}

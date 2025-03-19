@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Kết quả tìm kiếm: {{ query }} - Shop Bách Khoa{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">Kết quả tìm kiếm: "{{ query }}"</h1>
+    
+    {% if products %}
+    <p>Tìm thấy {{ products|length }} sản phẩm.</p>
+    
+    <div class="row">
+        {% for product in products %}
+        <div class="col-md-3 mb-4">
+            <div class="product-card h-100">
+                <a href="{{ product.get_absolute_url }}">
+                    {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid w-100">
+                    {% else %}
+                    <img src="{% static 'images/product-placeholder.jpg' %}" alt="{{ product.name }}" class="img-fluid w-100">
+                    {% endif %}
+                </a>
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
+                    </h5>
+                    <p class="product-price">{{ product.price }} VNĐ</p>
+                    <div class="d-grid gap-2">
+                        <a href="{{ product.get_absolute_url }}" class="btn btn-primary btn-sm">Xem chi tiết</a>
+                        <form action="{% url 'cart:cart_add' product.id %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="quantity" value="1">
+                            <input type="hidden" name="override" value="False">
+                            <button type="submit" class="btn btn-outline-primary btn-sm w-100">Thêm vào giỏ hàng</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        <h4 class="alert-heading">Không tìm thấy sản phẩm!</h4>
+        <p>Không tìm thấy sản phẩm nào phù hợp với từ khóa "{{ query }}".</p>
+        <hr>
+        <p class="mb-0">Vui lòng thử lại với từ khóa khác hoặc xem tất cả sản phẩm của chúng tôi.</p>
+    </div>
+    
+    <div class="text-center my-5">
+        <a href="{% url 'shop:product_list' %}" class="btn btn-primary">Xem tất cả sản phẩm</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

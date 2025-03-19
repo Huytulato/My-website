@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ product.name }} - Shop Bách Khoa{% endblock %}
+
+{% block content %}
+<div class="container">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'main:home' %}">Trang chủ</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'shop:product_list' %}">Sản phẩm</a></li>
+            <li class="breadcrumb-item"><a href="{{ product.category.get_absolute_url }}">{{ product.category.name }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
+        </ol>
+    </nav>
+    
+    <div class="row mb-5">
+        <!-- Product Image -->
+        <div class="col-md-5 mb-4">
+            <div class="product-image">
+                {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid rounded shadow">
+                {% else %}
+                <img src="{% static 'images/product-placeholder.jpg' %}" alt="{{ product.name }}" class="img-fluid rounded shadow">
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Product Info -->
+        <div class="col-md-7 mb-4">
+            <div class="product-detail">
+                <h1 class="product-title mb-3">{{ product.name }}</h1>
+                
+                <p class="product-price mb-3">
+                    <span class="fs-2 fw-bold">{{ product.price }} VNĐ</span>
+                </p>
+                
+                <div class="product-availability mb-4">
+                    {% if product.stock > 0 %}
+                    <span class="badge bg-success">Còn hàng</span>
+                    <span class="text-muted ms-2">Còn {{ product.stock }} sản phẩm</span>
+                    {% else %}
+                    <span class="badge bg-danger">Hết hàng</span>
+                    {% endif %}
+                </div>
+                
+                <div class="product-description mb-4">
+                    <h5>Mô tả sản phẩm</h5>
+                    <div class="bg-light p-3 rounded">
+                        {{ product.description|linebreaks }}
+                    </div>
+                </div>
+                
+                {% if product.stock > 0 %}
+                <form action="{% url 'cart:cart_add' product.id %}" method="post" class="mb-4">
+                    {% csrf_token %}
+                    <div class="row g-3 align-items-center">
+                        <div class="col-auto">
+                            <label for="quantity" class="form-label">Số lượng:</label>
+                        </div>
+                        <div class="col-auto">
+                            <select name="quantity" id="quantity" class="form-select">
+                                {% for i in "12345"|make_list %}
+                                {% if forloop.counter <= product.stock %}
+                                <option value="{{ forloop.counter }}">{{ forloop.counter }}</option>
+                                {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-auto">
+                            <input type="hidden" name="override" value="False">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-cart-plus me-2"></i>Thêm vào giỏ hàng
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                {% endif %}
+                
+                <div class="product-meta">
+                    <p><strong>Danh mục:</strong> <a href="{{ product.category.get_absolute_url }}">{{ product.category.name }}</a></p>
+                </div>
+                
+                <div class="product-share mt-4">
+                    <h5>Chia sẻ sản phẩm:</h5>
+                    <div class="social-buttons mt-2">
+                        <a href="#" class="btn btn-outline-primary me-2"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="btn btn-outline-info me-2"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="btn btn-outline-danger me-2"><i class="fab fa-pinterest"></i></a>
+                        <a href="#" class="btn btn-outline-success"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Related Products -->
+    <div class="related-products mt-5">
+        <h3 class="mb-4">Sản phẩm liên quan</h3>
+        <div class="row">
+            {% for related in related_products %}
+            <div class="col-md-3 mb-4">
+                <div class="product-card h-100">
+                    <a href="{{ related.get_absolute_url }}">
+                        {% if related.image %}
+                        <img src="{{ related.image.url }}" alt="{{ related.name }}" class="img-fluid w-100">
+                        {% else %}
+                        <img src="{% static 'images/product-placeholder.jpg' %}" alt="{{ related.name }}" class="img-fluid w-100">
+                        {% endif %}
+                    </a>
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a href="{{ related.get_absolute_url }}">{{ related.name }}</a>
+                        </h5>
+                        <p class="product-price">{{ related.price }} VNĐ</p>
+                        <a href="{{ related.get_absolute_url }}" class="btn btn-outline-primary btn-sm w-100">Xem chi tiết</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <p>Không có sản phẩm liên quan.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
